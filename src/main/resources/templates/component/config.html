@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!--th:block는 태그이다
+이 안에다가 우리가 모든 페이지에서 사용을 하게 되는 라이브러리를 추가해준다
+-->
+<th:block th:fragment="config">
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <!--  axios를 위한 cdn복사 주소    -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</th:block>
+<body>
+
+</body>
+</html>

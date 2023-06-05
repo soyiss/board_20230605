@@ -1,0 +1,51 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+#header {
+    background-color: #b5ccae;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+#nav {
+    display: flex;
+    padding: 10px 100px;
+    background-color: rgb(176, 124, 78);
+}
+
+#nav .menu {
+    padding: 10px;
+}
+
+#nav .menu a {
+    text-decoration: none;
+    color: white;
+}
+
+#nav .search {
+    margin-left: auto;
+}
+
+#section {
+    background-color: #e4e4e4;
+    padding: 20px;
+}
+
+#section h2 {
+    text-align: center;
+}
+
+#section pre {
+    text-align: left;
+}
+
+#footer {
+    background-color: #b5ccae;
+    text-align: center;
+    padding: 20px;
+}
+
+

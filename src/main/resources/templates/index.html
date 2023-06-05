@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="component/config :: config"></th:block>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+</head>
+<body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
+<div id="section">
+
+    <a href="/board/save">글작성</a>
+    <a href="/board/">글목록</a>
+</div>
+<div th:replace="component/footer :: footer"></div>
+</body>
+</html>

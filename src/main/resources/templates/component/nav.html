@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="nav" id="nav">
+    <div class="menu">
+        <a href="/">
+            home
+        </a>
+    </div>
+    <div class="menu">
+        <a href="/board/save">글작성</a>
+    </div>
+    <div class="menu">
+        <a href="/board/">글목록</a>
+    </div>
+    <div class="menu search">
+        <input type="text" placeholder="검색" id="q" style="display: inline-block;">
+        <i class="bi bi-search" onclick="search_func()"></i>
+    </div>
+</div>
+</body>
+</html>
