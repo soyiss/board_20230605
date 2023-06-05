@@ -5,6 +5,7 @@ import com.icia.board.entity.BoardEntity;
 import com.icia.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class BoardService {
     }
 
 
+    @Transactional //repository에서 jquery 어노테이션을 사용하려면 그걸 호출하는 메서드에 transactional어노테이션을 써줘야한다
     public void updateHits(Long id) {
 
         boardRepository.updateHits(id);
