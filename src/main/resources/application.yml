@@ -1,8 +1,9 @@
-# server port ?? ??
+# server port
+# server.port=8082
 server:
-  port: 8082
+  port: 8084
 
-# data base ?? ??
+# data base
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -10,17 +11,24 @@ spring:
     username: user_springboot
     password: 1234
 
-  # thymeleaf ?? ??
+  # thymeleaf
   thymeleaf:
     cache: false
 
-  # spring data jpa ??
+  # file size
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  # spring data jpa
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
     hibernate:
       ddl-auto: update
-# db query log ?? ??
+
+# db query log
 logging:
   level:
     org:
@@ -30,5 +38,3 @@ logging:
           descriptor:
             sql:
               BasicBinder: trace
-
-

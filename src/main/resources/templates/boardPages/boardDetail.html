@@ -23,7 +23,7 @@
         </tr>
         <tr>
             <th>date</th>
-            <td th:text="${board.createdAt}"></td>
+            <td th:text="*{#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         <tr>
             <th>hits</th>
@@ -35,8 +35,8 @@
         </tr>
         <tr th:if="${board.fileAttached == 1}">
             <th>image</th>
-            <td>
-                <img th:src="@{|/upload/${board.storedFileName}}" width="200" height="200" alt="">
+            <td th:each="fileName: ${board.storedFileName}">
+                <img th:src="@{|/upload/${fileName}}" width="200" height="200" alt="">
             </td>
         </tr>
     </table>

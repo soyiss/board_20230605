@@ -8,6 +8,7 @@ import com.icia.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +24,8 @@ public class BoardService {
 
     public Long save(BoardDTO boardDTO) throws IOException {
 
-        if(boardDTO.getBoardFile().isEmpty()){
+        //파일이 여러갠데 첫번째칸에 파일이없으면 다 없다라고 판단하고 있으면 있다라고 판단을 하겠다
+        if(boardDTO.getBoardFile().get(0).isEmpty()){
             //파일없음
             BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDTO);
             return boardRepository.save(boardEntity).getId();
@@ -37,14 +39,19 @@ public class BoardService {
             //자식데이터를 저장할때 부모의 객체를 받아야되서 여기다 미리 받아놈
             BoardEntity savedEntity = boardRepository.save(boardEntity);
             // 2. 파일이름 꺼내고, 저장용이름 만들고 , 파일로컬에 저장
-            String originalFileName = boardDTO.getBoardFile().getOriginalFilename();
-            String storedFileName = System.currentTimeMillis() + "-" + originalFileName;
-            String savePath = "D:\\springboot_img\\"+storedFileName;
-            boardDTO.getBoardFile().transferTo(new File(savePath));
-            // 3. BoardFileEntity 로 변환 후 board_file_table에 저장
-            //자식 데이터를 저장할 때 반드시 부모의 id가 아닌 부모의 Entity 객체가 전달되어야 한다(savedEntity가 부모의 entity값이다)
-            BoardFileEntity boardFileEntity = BoardFileEntity.toSaveBoardFileEntity(savedEntity, originalFileName, storedFileName);
-            boardFileRepository.save(boardFileEntity);
+            for (MultipartFile boardFile: boardDTO.getBoardFile()) {
+                String originalFileName = boardFile.getOriginalFilename();
+                String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
+                String savePath = "D:\\springboot_img\\" + storedFileName;
+                boardFile.transferTo(new File(savePath));
+                // 3. BoardFileEntity로 변환 후 board_file_table에 저장
+                // 자식 데이터를 저장할 때 반드시 부모의 id가 아닌 부모의 Entity 객체가 전달돼야 함.
+                //자식 데이터를 저장할 때 반드시 부모의 id가 아닌 부모의 Entity 객체가 전달되어야 한다(savedEntity가 부모의 entity값이다)
+                BoardFileEntity boardFileEntity =
+                        BoardFileEntity.toSaveBoardFileEntity(savedEntity, originalFileName, storedFileName);
+                boardFileRepository.save(boardFileEntity);
+            }
+
             return savedEntity.getId();
         }
 
