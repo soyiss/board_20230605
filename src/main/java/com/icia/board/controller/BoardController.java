@@ -3,6 +3,8 @@ package com.icia.board.controller;
 import com.icia.board.dto.BoardDTO;
 import com.icia.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,7 @@ public class BoardController {
         model.addAttribute("boardList", boardDTOList);
         return "boardPages/boardList";
     }
+
     @GetMapping("/{id}")
     public String findById(@PathVariable Long id, Model model) {
         boardService.updateHits(id);
@@ -45,27 +48,25 @@ public class BoardController {
         model.addAttribute("board", boardDTO);
         return "boardPages/boardDetail";
     }
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id){
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Long id) {
         boardService.delete(id);
-        return "redirect:/board/";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/update/{id}")
-    public String updateForm(@PathVariable Long id,Model model){
-
+    public String updateForm(@PathVariable Long id, Model model) {
         BoardDTO boardDTO = boardService.findById(id);
-        model.addAttribute("board",boardDTO);
+        model.addAttribute("board", boardDTO);
         return "boardPages/boardUpdate";
     }
 
-    @PostMapping("/update")
-    public String update(@ModelAttribute BoardDTO boardDTO ){
-
-        System.out.println("유ㅜ우우 boardDTO = " + boardDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity update(@RequestBody BoardDTO boardDTO) {
         boardService.update(boardDTO);
-        System.out.println("야ㅑㅇboardDTO = " + boardDTO);
-        return "redirect:/board/{id}";
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 

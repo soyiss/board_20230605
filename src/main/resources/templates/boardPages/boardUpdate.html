@@ -9,15 +9,50 @@
 
 <div id="section">
     <form action="/board/update" method="post">
-        <input type="hidden" name="id" th:value="${board.id}"> <br>
-        작성자<input type="text" name="boardWriter" th:value="${board.boardWriter}"> <br>
-        글제목<input type="text" name="boardTitle" th:value="${board.boardTitle}"> <br>
-        글내용<input type="text" name="boardContents" th:value="${board.boardContents}"> <br>
-        <input type="submit" value="수정">
+        writer: <input type="text" name="boardWriter" class="form-control" th:value="${board.boardWriter}" placeholder="작성자" readonly>
+        title:<input type="text" name="boardTitle" class="form-control" th:value="${board.boardTitle}" placeholder="제목">
+
+        <!--th로 textarea를 적용하는 경우       -->
+        contents: <textarea name="boardContents" cols="30" rows="10" id="board-contents" class="form-control" placeholder="내용을 입력하세요" th:text="${board.boardContents}"></textarea>
+
+        <!--  수정을 하지 않더라도 업데이트 할땐 데이터들을 다 가져가야된다      -->
+        <input type="hidden" name="id" th:value="${board.id}">
+        <input type="hidden" name="boardHits" th:value="${board.boardHits}">
+        <input type="hidden" name="boardPass" th:value="${board.boardPass}">
+<!--        <input type="submit" value="수정 " class="btn btn-primary">-->
+
+            <!--   axios로 처리를 한다면     -->
+        <input type="button" value="수정" onclick="board_update()" class="btn btn-primary">
     </form>
 </div>
 
 
 <div th:replace="component/footer :: footer"></div>
 </body>
+<script th:inline="javascript">
+    const board_update = () => {
+        const id = document.querySelector('input[name="id"]').value;
+        const boardWriter = document.querySelector('input[name="boardWriter"]').value;
+        const boardTitle = document.querySelector('input[name="boardTitle"]').value;
+        const boardContents = document.querySelector("#board-contents").value;
+        const boardHits = document.querySelector('input[name="boardHits"]').value;
+        const boardPass = document.querySelector('input[name="boardPass"]').value;
+        axios({
+            method: "put",
+            url: "/board/"+id,
+            data: {
+                id: id,
+                boardTitle: boardTitle,
+                boardWriter: boardWriter,
+                boardContents: boardContents,
+                boardHits: boardHits,
+                boardPass: boardPass
+            }
+        }).then(res => {
+            location.href = "/board/" + id;
+        }).catch(err => {
+            alert("수정 실패!!");
+        })
+    }
+</script>
 </html>

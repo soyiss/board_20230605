@@ -34,6 +34,7 @@ public class BoardEntity {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
+    //updatable = false로 해줘서 수정할떄 영향을 받지 않음 (그래서 따로 안가져가도된다)
 
     public static BoardEntity toSaveEntity(BoardDTO boardDTO) {
         BoardEntity boardEntity = new BoardEntity();
@@ -52,8 +53,7 @@ public class BoardEntity {
         boardEntity.setBoardPass(boardDTO.getBoardPass());
         boardEntity.setBoardTitle(boardDTO.getBoardTitle());
         boardEntity.setBoardContents(boardDTO.getBoardContents());
-        boardEntity.setBoardHits(0);
-        boardEntity.setCreatedAt(boardDTO.getCreatedAt());
+        boardEntity.setBoardHits(boardDTO.getBoardHits());
         return boardEntity;
     }
 

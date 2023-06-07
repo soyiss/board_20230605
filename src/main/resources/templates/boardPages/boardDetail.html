@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="component/config :: config"></th:block>
 </head>
@@ -8,82 +8,92 @@
 <div th:replace="component/nav :: nav"></div>
 
 <div id="section">
-    <table class="table table-striped">
+    <table class="table table-hover">
         <tr>
             <th>id</th>
             <td th:text="${board.id}"></td>
-        </tr>
-        <tr>
-            <th>writer</th>
-            <td th:text="${board.boardWriter}"></td>
         </tr>
         <tr>
             <th>title</th>
             <td th:text="${board.boardTitle}"></td>
         </tr>
         <tr>
-            <th>contents</th>
-            <td th:text="${board.boardContents}"></td>
+            <th>writer</th>
+            <td th:text="${board.boardWriter}"></td>
+        </tr>
+        <tr>
+            <th>date</th>
+            <td th:text="${board.createdAt}"></td>
         </tr>
         <tr>
             <th>hits</th>
             <td th:text="${board.boardHits}"></td>
         </tr>
         <tr>
-            <th>date</th>
-            <td th:text="${board.createdAt}"></td>
+            <th>contents</th>
+            <td th:text="${board.boardContents}"></td>
         </tr>
     </table>
-    <button th:onclick="board_update()">글수정</button>
-    <div id="pass" style="display: none">
-        <input type="text" name="boardPass" placeholder="비밀번호 입력하세요.">
-        <button th:onclick="updateBoard([[${board.id}]])">확인</button>
+    <div class="container">
+        <button class="btn btn-primary" onclick="list_req()">목록</button>
+        <button class="btn btn-warning" onclick="req('update')">수정</button>
+        <button class="btn btn-danger" onclick="req('delete')">삭제</button>
+    </div>
+    <div id="pass-check">
+
     </div>
 
-    <button th:onclick="board_delete()">글삭제</button>
-    <div id="pass1" style="display: none">
-        <input type="text" name="boardPass" id="boardPass" placeholder="비밀번호 입력하세요.">
-        <button th:onclick="deleteBoard([[${board.id}]])">확인</button>
-    </div>
 </div>
 
 <div th:replace="component/footer :: footer"></div>
 </body>
-<script>
-    const board_update = () => {
-        document.querySelector("#pass").style.display = "block";
-
+<script th:inline="javascript">
+    const list_req = () => {
+        location.href = "/board/";
     }
-    const updateBoard = (id) => {
-        const passDB =[[${board.boardPass}]];
-        const password = document.querySelector('input[name=boardPass]').value;
-        if(passDB == password){
-            location.href="/board/update/"+id;
-        }else{
-            alert("비밀번호가 일치하지 않습니다");
-            //쿼리셀렉터로 가져와서 해봤는데 안된다!!
-            document.getElementById("boardPass").value="";
+
+    const req = (type) => {
+        console.log("type", type);
+        document.getElementById("pass-check").innerHTML = "<input type=\"text\" placeholder=\"password\" id=\"password\">\n" +
+            "        <button onclick=\"pass_check('" + type + "')\">확인</button>";
+    }
+
+    const pass_check = (type) => {
+        console.log("pass_check type 변수 값", type);
+        const password = document.getElementById("password").value;
+        const passDB = [[${board.boardPass}]];
+        const id = [[${board.id}]];
+        if (password == passDB) {
+            if (type == "update") {
+                location.href = "/board/update/" + id;
+            } else if (type == "delete") {
+                // location.href = "/board/delete/"+id;
+                axios({
+                    method: "delete",
+                    url: "/board/"+id
+                }).then(res => {
+                    location.href = "/board/";
+                }).catch(err => {
+                    alert("삭제 실패!!");
+                });
+            }
+        } else {
+            alert("비밀번호 불일치!!");
         }
-
-
     }
 
+    const delete_pass_check = () => {
+        const password = document.getElementById("password").value;
+        const passDB = [[${board.boardPass}]];
+        const id = [[${board.id}]];
+        if (password == passDB) {
 
-    const board_delete = () => {
-        document.querySelector("#pass1").style.display = "block";
-
-    }
-    const deleteBoard = (id) => {
-        const passDB =[[${board.boardPass}]];
-        const password = document.querySelector('input[name=boardPass]').value;
-        if(passDB == password){
-            location.href="/board/delete/"+id;
-        }else{
-            alert("비밀번호가 일치하지 않습니다");
-            document.getElementById("boardPass").value="";
+        } else {
+            alert("비밀번호 불일치!!");
         }
-
-
     }
+
+
+
 </script>
 </html>
