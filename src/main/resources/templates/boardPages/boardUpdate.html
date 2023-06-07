@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <th:block th:replace="component/config :: config"></th:block>
 </head>
 <body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
 
+<div id="section">
+    <form action="/board/update" method="post">
+        <input type="hidden" name="id" th:value="${board.id}"> <br>
+        작성자<input type="text" name="boardWriter" th:value="${board.boardWriter}"> <br>
+        글제목<input type="text" name="boardTitle" th:value="${board.boardTitle}"> <br>
+        글내용<input type="text" name="boardContents" th:value="${board.boardContents}"> <br>
+        <input type="submit" value="수정">
+    </form>
+</div>
+
+
+<div th:replace="component/footer :: footer"></div>
 </body>
 </html>

@@ -1,10 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <th:block th:replace="component/config :: config"></th:block>
 </head>
 <body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
 
+<div id="section">
+    <table class="table table-striped">
+        <tr>
+            <th>id</th>
+            <td th:text="${board.id}"></td>
+        </tr>
+        <tr>
+            <th>writer</th>
+            <td th:text="${board.boardWriter}"></td>
+        </tr>
+        <tr>
+            <th>title</th>
+            <td th:text="${board.boardTitle}"></td>
+        </tr>
+        <tr>
+            <th>contents</th>
+            <td th:text="${board.boardContents}"></td>
+        </tr>
+        <tr>
+            <th>hits</th>
+            <td th:text="${board.boardHits}"></td>
+        </tr>
+        <tr>
+            <th>date</th>
+            <td th:text="${board.createdAt}"></td>
+        </tr>
+    </table>
+    <button th:onclick="board_update()">글수정</button>
+    <div id="pass" style="display: none">
+        <input type="text" name="boardPass" placeholder="비밀번호 입력하세요.">
+        <button th:onclick="updateBoard([[${board.id}]])">확인</button>
+    </div>
+
+    <button th:onclick="board_delete()">글삭제</button>
+    <div id="pass1" style="display: none">
+        <input type="text" name="boardPass" id="boardPass" placeholder="비밀번호 입력하세요.">
+        <button th:onclick="deleteBoard([[${board.id}]])">확인</button>
+    </div>
+</div>
+
+<div th:replace="component/footer :: footer"></div>
 </body>
+<script>
+    const board_update = () => {
+        document.querySelector("#pass").style.display = "block";
+
+    }
+    const updateBoard = (id) => {
+        const passDB =[[${board.boardPass}]];
+        const password = document.querySelector('input[name=boardPass]').value;
+        if(passDB == password){
+            location.href="/board/update/"+id;
+        }else{
+            alert("비밀번호가 일치하지 않습니다");
+            //쿼리셀렉터로 가져와서 해봤는데 안된다!!
+            document.getElementById("boardPass").value="";
+        }
+
+
+    }
+
+
+    const board_delete = () => {
+        document.querySelector("#pass1").style.display = "block";
+
+    }
+    const deleteBoard = (id) => {
+        const passDB =[[${board.boardPass}]];
+        const password = document.querySelector('input[name=boardPass]').value;
+        if(passDB == password){
+            location.href="/board/delete/"+id;
+        }else{
+            alert("비밀번호가 일치하지 않습니다");
+            document.getElementById("boardPass").value="";
+        }
+
+
+    }
+</script>
 </html>
