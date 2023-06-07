@@ -48,7 +48,7 @@ public class BoardEntity {
     // mappedBy = "boardEntity"는 매핑 // 보드파일엔티티에서 private BoardEntity boardEntity;을 가리킨다
     // @OneToMany는 DB에서 테이블간의 관계를 얘기함(1:N관계 등등)보드 엔티티는 1( @OneToMany) 보드파일엔티티는 N(@ManyToOne) 이다.
     @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<BoardFileEntity> boardFileEntities = new ArrayList<>(); // 참조관계를 위한 문법
+    private List<BoardFileEntity> boardFileEntityList = new ArrayList<>(); // 참조관계를 위한 문법
     // 부모 하나에 자식은 여러개니까 BoardFileEntity는 List형태로 준다
 
 
