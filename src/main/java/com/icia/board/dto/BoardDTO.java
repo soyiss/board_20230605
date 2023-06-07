@@ -2,6 +2,7 @@ package com.icia.board.dto;
 
 import com.icia.board.entity.BoardEntity;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +20,12 @@ public class BoardDTO {
     private String boardContents;
     private LocalDateTime createdAt;
     private int boardHits;
+    private MultipartFile boardFile;
+
+    //파일 여부확인을 위한 컬럼
+    private int fileAttached;
+    private String originalFileName;
+    private String storedFileName;
 
 
     public static BoardDTO toDTO(BoardEntity boardEntity) {
@@ -31,16 +38,6 @@ public class BoardDTO {
         boardDTO.setBoardHits(boardEntity.getBoardHits());
         boardDTO.setCreatedAt(boardEntity.getCreatedAt());
         return boardDTO;
-
-        //        return BoardDTO.builder()
-//                .id(boardEntity.getId())
-//                .boardWriter(boardEntity.getBoardWriter())
-//                .boardPass(boardEntity.getBoardPass())
-//                .boardTitle(boardEntity.getBoardTitle())
-//                .boardContents(boardEntity.getBoardContents())
-//                .boardHits(boardEntity.getBoardHits())
-//                .createdAt(boardEntity.getCreatedAt())
-//                .build();
 
     }
 }

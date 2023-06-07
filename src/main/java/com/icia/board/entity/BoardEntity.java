@@ -39,6 +39,11 @@ public class BoardEntity {
     //updatable = false로 해줘서 수정할떄 영향을 받지 않음 (그래서 따로 안가져가도된다)
 
 
+    //파일 여부를 판단하는 컬럼
+    @Column
+    private int fileAttached;
+
+
     // 참조관계 설정(부모테이블)
     // mappedBy = "boardEntity"는 매핑 // 보드파일엔티티에서 private BoardEntity boardEntity;을 가리킨다
     // @OneToMany는 DB에서 테이블간의 관계를 얘기함(1:N관계 등등)보드 엔티티는 1( @OneToMany) 보드파일엔티티는 N(@ManyToOne) 이다.
@@ -57,6 +62,8 @@ public class BoardEntity {
         boardEntity.setBoardTitle(boardDTO.getBoardTitle());
         boardEntity.setBoardContents(boardDTO.getBoardContents());
         boardEntity.setBoardHits(0);
+        //파일이 없을떄 0
+        boardEntity.setFileAttached(0);
         return boardEntity;
     }
 
@@ -71,4 +78,17 @@ public class BoardEntity {
         return boardEntity;
     }
 
+    //파일이 첨부된 게시글이기 때문데 boardEntity.setFileAttached(1);
+    public static BoardEntity toSaveEntityWithFile(BoardDTO boardDTO) {
+        BoardEntity boardEntity = new BoardEntity();
+        boardEntity.setBoardWriter(boardDTO.getBoardWriter());
+        boardEntity.setBoardPass(boardDTO.getBoardPass());
+        boardEntity.setBoardTitle(boardDTO.getBoardTitle());
+        boardEntity.setBoardContents(boardDTO.getBoardContents());
+        boardEntity.setBoardHits(0);
+        //파일이 있을때 1
+        boardEntity.setFileAttached(1);
+        return boardEntity;
+
+    }
 }
