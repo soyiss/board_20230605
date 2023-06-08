@@ -25,6 +25,8 @@ public class CommentController {
 
     @PostMapping("/save")
     public ResponseEntity saveForm(@RequestBody CommentDTO commentDTO){
+
+        System.out.println("commentDTO = " + commentDTO);
         try{
             commentService.save(commentDTO);
             // 댓글 작성 후에 댓글 목록을 끌어옴(끌어올땐 findAll을 호출하고 게시글에 달려있는 댓글목록을 가져와야도ㅣ니깐 boardId로 매개변수를 줌)
