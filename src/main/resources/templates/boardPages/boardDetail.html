@@ -54,20 +54,25 @@
         <button onclick="comment_write()">댓글작성</button>
     </div>
     <div class="container" id="comment-list">
-        <table class="table">
-            <tr>
-                <th>id</th>
-                <th>writer</th>
-                <th>contents</th>
-                <th>date</th>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
+        <div th:if="${commentList == null}">
+            <p>작성된 댓글이 없습니다.</p>
+        </div>
+        <div th:unless="${commentList == null}">
+            <table class="table">
+                <tr>
+                    <th>id</th>
+                    <th>writer</th>
+                    <th>contents</th>
+                    <th>date</th>
+                </tr>
+                <tr th:each="comment:${commentList}">
+                    <td th:text="${comment.id}"></td>
+                    <td th:text="${comment.commentWriter}"></td>
+                    <td th:text="${comment.commentContents}"></td>
+                    <td th:text="${comment.createdAt}"></td>
+                </tr>
+            </table>
+        </div>
     </div>
 
 </div>
@@ -130,7 +135,7 @@
             "                <th>contents</th>\n" +
             "                <th>date</th>\n" +
             "            </tr>";
-        for(let i in commentList) {
+        for (let i in commentList) {
             output += "<tr>\n" +
                 "                <td>" + commentList[i].id + "</td>\n" +
                 "                <td>" + commentList[i].commentWriter + "</td>\n" +
