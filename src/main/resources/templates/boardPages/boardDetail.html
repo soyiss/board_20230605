@@ -48,6 +48,14 @@
     <div id="pass-check">
 
     </div>
+    <div class="container" id="comment-write">
+        <input type="text" id="comment-writer" placeholder="작성자">
+        <input type="text" id="comment-contents" placeholder="내용">
+        <button onclick="comment_write()">댓글작성</button>
+    </div>
+    <div class="container" id="comment-list">
+
+    </div>
 
 </div>
 
@@ -76,7 +84,7 @@
                 // location.href = "/board/delete/"+id;
                 axios({
                     method: "delete",
-                    url: "/board/"+id
+                    url: "/board/" + id
                 }).then(res => {
                     location.href = "/board/";
                 }).catch(err => {
@@ -99,6 +107,26 @@
         }
     }
 
+
+    const comment_write = () => {
+        const writer = document.querySelector("#comment-writer").value;
+        const contents = document.querySelector("#comment-contents").value;
+        const boardId = [[${board.id}]];
+        axios({
+            method: "post",
+            url: "/comment/save",
+            data: {
+                commentWriter: writer,
+                commentContents: contents,
+                boardId: boardId
+            }
+        }).then(res => {
+            console.log("res", res);
+
+        }).catch(err => {
+            console.log("err", err);
+        });
+    }
 
 
 </script>

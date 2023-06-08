@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "board_table")
 @Getter @Setter
-public class BoardEntity {
+public class BoardEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,10 +33,13 @@ public class BoardEntity {
     @Column
     private int boardHits;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-    //updatable = false로 해줘서 수정할떄 영향을 받지 않음 (그래서 따로 안가져가도된다)
+
+    //BaseEntity를 상속받음으로써 이 컬럼은 주석처리 함
+
+//    @CreationTimestamp
+//    @Column(updatable = false)
+//    private LocalDateTime createdAt;
+//    //updatable = false로 해줘서 수정할떄 영향을 받지 않음 (그래서 따로 안가져가도된다)
 
 
     //파일 여부를 판단하는 컬럼
@@ -51,7 +54,10 @@ public class BoardEntity {
     private List<BoardFileEntity> boardFileEntityList = new ArrayList<>(); // 참조관계를 위한 문법
     // 부모 하나에 자식은 여러개니까 BoardFileEntity는 List형태로 준다
 
-
+    // 참조관계 설정(부모테이블)
+    @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CommentEntity> commentEntityList = new ArrayList<>(); // 참조관계를 위한 문법
+    // 부모 하나에 자식은 여러개니까 BoardFileEntity는 List형태로 준다
 
 
 

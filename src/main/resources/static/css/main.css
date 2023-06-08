@@ -8,12 +8,18 @@
     text-align: center;
     color: white;
     padding: 20px;
+    font-weight: bold;
+    font-family: 'Prompt', sans-serif;
 }
 
 #nav {
     display: flex;
     padding: 10px 100px;
     background-color: rgb(176, 124, 78);
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 #nav .menu {
@@ -32,6 +38,7 @@
 #section {
     background-color: #e4e4e4;
     padding: 20px;
+    height: 300px;
 }
 
 #section h2 {
@@ -44,8 +51,13 @@
 
 #footer {
     background-color: #b5ccae;
-    text-align: center;
-    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    font-family: 'Prompt', sans-serif;
 }
 
-
+#footer h6 {
+    margin: 0;
+}

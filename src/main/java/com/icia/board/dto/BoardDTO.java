@@ -27,8 +27,8 @@ public class BoardDTO {
 
     //파일 여부확인을 위한 컬럼
     private int fileAttached;
-    private List<String> originalFileName;
-    private List<String> storedFileName;
+    private List<String> originalFileName = new ArrayList<>();
+    private List<String> storedFileName = new ArrayList<>();
 
 
     public static BoardDTO toDTO(BoardEntity boardEntity) {
