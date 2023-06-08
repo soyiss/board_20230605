@@ -25,7 +25,8 @@ public class BoardService {
     public Long save(BoardDTO boardDTO) throws IOException {
 
         //파일이 여러갠데 첫번째칸에 파일이없으면 다 없다라고 판단하고 있으면 있다라고 판단을 하겠다
-        if(boardDTO.getBoardFile().get(0).isEmpty()){
+        //boardDTO.getBoardFile() == null 이거는 테스트 조건을 쓰다보니 필요해서 써야됌 (테스트 코드 안하면 안써도됌)
+        if(boardDTO.getBoardFile() == null || boardDTO.getBoardFile().get(0).isEmpty()){
             //파일없음
             BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDTO);
             return boardRepository.save(boardEntity).getId();
