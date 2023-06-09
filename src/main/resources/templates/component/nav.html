@@ -17,6 +17,15 @@
     <div class="menu">
         <a href="/board/">글목록</a>
     </div>
+    <div class="menu">
+        <!--@{/board(page=1)}의 형태는 실제 /board?page=1형태의 주솟값이다
+            7페이지에 있는 33번글 조회
+            rest api => /board/7/33
+            /board/33 => 이 주솟값의 페이지는 33번글 이어야만 한다(주솟값만 가지고도 어떤 데이턴지를 딱 알수 있어야함)
+            /board/33??page=7(우리는 이렇게 쓸거임 => 페이지랑, 검색어는 쿼리스트링 형식으로 쓸거임)=>@{/board(page=1)}
+        -->
+        <a th:href="@{/board(page=1)}">페이징목록</a>
+    </div>
     <div class="menu search">
         <input type="text" placeholder="검색" id="q" style="display: inline-block;">
         <i class="bi bi-search" onclick="search_func()"></i>

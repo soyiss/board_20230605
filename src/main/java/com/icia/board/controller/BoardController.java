@@ -5,6 +5,9 @@ import com.icia.board.dto.CommentDTO;
 import com.icia.board.service.BoardService;
 import com.icia.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -79,6 +82,35 @@ public class BoardController {
         boardService.update(boardDTO);
         return new ResponseEntity<>(HttpStatus.OK);
 
+    }
+
+    // /board?page=1(/board는 위에 묶여져있어서 겟매핑만 줘도된다
+    @GetMapping
+    public String paging(@PageableDefault(page=1)Pageable pageable, Model model){
+        System.out.println("page = " + pageable.getPageNumber());
+        Page<BoardDTO> boardDTOS = boardService.paging(pageable);
+        model.addAttribute("boardList",boardDTOS);
+
+        //시작페이지(startPage), 마지막페ㅣ지(endPage)값 계산
+        //하단에 보여줄 페이지 갯수 3개
+        //사용자가 1.2.3  보여주고있으면 하단에 보여지는 startPage는 1, endPage는 3
+        int blockLimit = 3;
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        // endPage 삼항 연산자 사용함
+        int endPage = ((startPage + blockLimit - 1) < boardDTOS.getTotalPages()) ? startPage + blockLimit - 1 : boardDTOS.getTotalPages();
+        //(startPage + blockLimit - 1)는 endPage 계산하는거 //boardDTOS.getTotalPages()는 max페이지 계산하는거
+        //위에 내용은 if문으로 바꿔보기
+       /* if((startPage + blockLimit - 1) < boardDTOS.getTotalPages()){
+            endPage = startPage + blockLimit - 1;
+        }else{
+            endPage = boardDTOS.getTotalPages();
+        }*/
+
+
+
+        model.addAttribute("startPage",startPage);
+        model.addAttribute("endPage",endPage);
+        return "/boardPages/boardPaging";
     }
 
 

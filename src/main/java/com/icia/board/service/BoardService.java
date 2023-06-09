@@ -5,7 +5,12 @@ import com.icia.board.entity.BoardEntity;
 import com.icia.board.entity.BoardFileEntity;
 import com.icia.board.repository.BoardFileRepository;
 import com.icia.board.repository.BoardRepository;
+import com.icia.board.util.UtilClass;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -94,5 +99,24 @@ public class BoardService {
     public void update(BoardDTO boardDTO) {
         BoardEntity boardEntity = BoardEntity.toUpdateEntity(boardDTO);
         boardRepository.save(boardEntity);
+    }
+
+    // 사용자가 요청하는 페이지가 있으면 JPA한테 요청할땐 무조건 1을 뺴줘서 요청해야한다
+    public Page<BoardDTO> paging(Pageable pageable) {
+        int page = pageable.getPageNumber()-1;
+        int pageLimit = 5;
+
+        //page는 몇페이지를 볼거냐
+        //pageLimit는 몇개 글씩 볼거냐
+        //Sort.by(Sort.Direction.DESC,"id")는 id를 기준으로 내림차순 정렬 하겠다
+        Page<BoardEntity> boardEntities = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        Page<BoardDTO> boardDTOS = boardEntities.map(boardEntity -> BoardDTO.builder()
+                .id(boardEntity.getId())
+                .boardTitle(boardEntity.getBoardTitle())
+                .boardWriter(boardEntity.getBoardWriter())
+                .createdAt(UtilClass.dateFormat(boardEntity.getCreatedAt()))
+                .boardHits(boardEntity.getBoardHits())
+                .build());
+        return boardDTOS;
     }
 }
