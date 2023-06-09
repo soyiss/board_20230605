@@ -38,6 +38,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity,Long> {
     // 작성자로 검색한 결과를 페이징 한다면
     //리턴 타입이 Page타입으로 바뀜,매개변수로 Pageable 객체를 넘겨줌
     Page<BoardEntity> findByBoardWriterContaining(String q, Pageable pageable);
+    // 제목으로 검색한 결과를 페이징 한다면
+    Page<BoardEntity> findByBoardTitleContaining(String q, Pageable pageable);
 
 
     // 제목으로 검색한 결과를 id기준 내림차순 정렬 한다면(OrderByIdDesc를 붙여줌)

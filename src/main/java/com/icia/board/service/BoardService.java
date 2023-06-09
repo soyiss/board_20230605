@@ -102,14 +102,23 @@ public class BoardService {
     }
 
     // 사용자가 요청하는 페이지가 있으면 JPA한테 요청할땐 무조건 1을 뺴줘서 요청해야한다
-    public Page<BoardDTO> paging(Pageable pageable) {
+    public Page<BoardDTO> paging(Pageable pageable, String type, String q) {
         int page = pageable.getPageNumber()-1;
         int pageLimit = 5;
-
+        Page<BoardEntity> boardEntities = null;
+        if (type.equals("title")) {
+            // 제목으로 검색요청이 왔다면
+            boardEntities = boardRepository.findByBoardTitleContaining(q, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        }else if(type.equals("writer")){
+            // 작성자로 검색용청이 왔다면
+            boardEntities = boardRepository.findByBoardWriterContaining(q, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        }else {
+            boardEntities = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        }
+        //일반 메서드로 검색요청이 왔다면
         //page는 몇페이지를 볼거냐
         //pageLimit는 몇개 글씩 볼거냐
         //Sort.by(Sort.Direction.DESC,"id")는 id를 기준으로 내림차순 정렬 하겠다
-        Page<BoardEntity> boardEntities = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
         Page<BoardDTO> boardDTOS = boardEntities.map(boardEntity -> BoardDTO.builder()
                 .id(boardEntity.getId())
                 .boardTitle(boardEntity.getBoardTitle())

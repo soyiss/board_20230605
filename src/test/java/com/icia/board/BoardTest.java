@@ -139,7 +139,7 @@ public class BoardTest {
     @DisplayName("작성자,제목 검색 기능 테스트")
     public void searchTest2(){
         //검색어는 q 하나인데 이게 제목이나 작성자에 포함되는걸 조회하니까 메서드 매개변수를 똑같이 (q,q)를 준다
-        String q = "30";
+        String q = "";
         List<BoardEntity> boardEntityList = boardRepository.findByBoardTitleContainingOrBoardWriterContainingOrderByIdDesc(q, q);
         boardEntityList.forEach(boardEntity -> {
             System.out.println(BoardDTO.toDTO(boardEntity));

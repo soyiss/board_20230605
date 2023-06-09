@@ -9,81 +9,89 @@
 
 <div id="section">
     <div class="container" id="paging-list">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">id</th>
-                <th scope="col">writer</th>
-                <th scope="col">title</th>
-                <th scope="col">date</th>
-                <th scope="col">hits</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="board: ${boardList}">
-                <td th:text="${board.id}"></td>
-                <td th:text="${board.boardWriter}"></td>
-                <td><a th:href="@{|/board/${board.id}?page=${boardList.number+1}|}" th:text="${board.boardTitle}">제목</a></td>
-                <td th:text="${board.createdAt}"></td>
-                <td th:text="${board.boardHits}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div th:if="${boardList != null}" id="board-list">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">writer</th>
+                    <th scope="col">title</th>
+                    <th scope="col">date</th>
+                    <th scope="col">hits</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="board: ${boardList}">
+                    <td th:text="${board.id}"></td>
+                    <td th:text="${board.boardWriter}"></td>
+                    <td><a th:href="@{|/board/${board.id}?page=${boardList.number + 1}&type=${type}&q=${q}|}"
+                           th:text="${board.boardTitle}">제목</a></td>
+                    <td th:text="${board.createdAt}"></td>
+                    <td th:text="${board.boardHits}"></td>
+                </tr>
+                </tbody>
+            </table>
 
-        <div class="container">
-            <ul class="pagination justify-content-center">
-                <li class="page-item">
-                    <!--첫페이지 요청 링크 /board?page=1 -->
-                    <a class="page-link" th:href="@{/board(page=1)}">
-                        <span>First</span>
-                    </a>
-                </li>
+            <div class="container">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <!--첫페이지 요청 링크 /board?page=1 -->
+                        <a class="page-link" th:href="@{/board(page=1, type=${type}, q=${q})}">
+                            <span>First</span>
+                        </a>
+                    </li>
 
-                <li th:class="${boardList.first} ? 'disabled'" class="page-item">
-                    <!--boardList.first: isFirst()
-                        boardList.number: getNumber()-->
-                    <!-- getNumber()가 주는값은 사용자가 보는거보다 하나 작은 값을 가지고있다(JPA니깐) -->
-                    <a class="page-link" th:href="${boardList.first} ? '#' : @{/board(page=${boardList.number})}">
-                        <!-- 사용자 3페이지, number 2 /board?page=2 -->
-                        <span><</span> <!-- < -->
-                    </a>
-                </li>
+                    <li th:class="${boardList.first} ? 'disabled'" class="page-item">
+                        <!--boardList.first: isFirst()
+                            boardList.number: getNumber()-->
+                        <!-- getNumber()가 주는값은 사용자가 보는거보다 하나 작은 값을 가지고있다(JPA니깐) -->
+                        <a class="page-link"
+                           th:href="${boardList.first} ? '#' : @{/board(page=${boardList.number}, type=${type}, q=${q})}">
+                            <!-- 사용자 3페이지, number 2 /board?page=2 -->
+                            <span><</span> <!-- < -->
+                        </a>
+                    </li>
 
-                <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할
-                    for(int page=startPage; page<=endPage; page++) -->
-                <!-- <li th:each="page: ${#numbers.sequence(startPage, endPage)}"는 스타트부터 엔드까지 순차적으로 값을 만드는것이다 //위에 포문으로 표현한거랑 같은 의미 -->
-                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-                    th:class="${page == boardList.number + 1} ? 'page-item active'" class="page-item">
-                    <!-- (위에 식)현재 보고있는 페이지가 반복변수 페이지랑 같다면 active클래스를 적용해라 (JPA랑 사용자랑 페이지가 차이나서 +1을 해줌)            -->
-                    <a class="page-link" th:text="${page}" th:href="@{/board(page=${page})}"></a>
-                </li>
+                    <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할
+                        for(int page=startPage; page<=endPage; page++) -->
+                    <!-- <li th:each="page: ${#numbers.sequence(startPage, endPage)}"는 스타트부터 엔드까지 순차적으로 값을 만드는것이다 //위에 포문으로 표현한거랑 같은 의미 -->
+                    <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                        th:class="${page == boardList.number + 1} ? 'page-item active'" class="page-item">
+                        <!-- (위에 식)현재 보고있는 페이지가 반복변수 페이지랑 같다면 active클래스를 적용해라 (JPA랑 사용자랑 페이지가 차이나서 +1을 해줌)            -->
+                        <a class="page-link" th:text="${page}"
+                           th:href="@{/board(page=${page}, type=${type}, q=${q})}"></a>
+                    </li>
 
-                <!-- 다음 페이지 요청
-                    현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
-                    getNumber() 값은 2임.
-                    따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
-                <!-- last라면 disabled를 하겠다               -->
-                <li th:class="${boardList.last} ? 'disabled'">
-                <!--  만약 사용자가 보고있는 페이지가 3이라면 사용자 입장에선 다름페이지가 4이다
-                      + 2를 해야 사용자 입장에서 보고싶은 4페이지가 나올것이다
-                -->
-                    <a class="page-link" th:href="${boardList.last} ? '#' : @{/board(page=${boardList.number + 2})}">
-                        <!-- 사용자 3페이지, number 2 /board?page=4 -->
-                        <span>&gt;</span>
-                    </a>
-                </li>
+                    <!-- 다음 페이지 요청
+                        현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+                        getNumber() 값은 2임.
+                        따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+                    <!-- last라면 disabled를 하겠다               -->
+                    <li th:class="${boardList.last} ? 'disabled'">
+                        <!--  만약 사용자가 보고있는 페이지가 3이라면 사용자 입장에선 다름페이지가 4이다
+                              + 2를 해야 사용자 입장에서 보고싶은 4페이지가 나올것이다
+                        -->
+                        <a class="page-link"
+                           th:href="${boardList.last} ? '#' : @{/board(page=${boardList.number + 2}, type=${type}, q=${q})}">
+                            <!-- 사용자 3페이지, number 2 /board?page=4 -->
+                            <span>&gt;</span>
+                        </a>
+                    </li>
 
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/board(page=${boardList.totalPages})}">
-                        <span>Last</span>
-                    </a>
-                </li>
-            </ul>
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{/board(page=${boardList.totalPages}, type=${type}, q=${q})}">
+                            <span>Last</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
-
+        <div th:unless="${boardList != null}">
+            <h1>검색결과가 없습니다!!</h1>
+        </div>
+        <div th:replace="component/footer :: footer"></div>
     </div>
-
-    <div th:replace="component/footer :: footer"></div>
 </div>
 </body>
 </html>

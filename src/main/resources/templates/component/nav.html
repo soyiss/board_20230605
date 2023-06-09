@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <th:block th:replace="component/config :: config"></th:block>
 </head>
 <body>
 <div th:fragment="nav" id="nav">
@@ -27,9 +26,22 @@
         <a th:href="@{/board(page=1)}">페이징목록</a>
     </div>
     <div class="menu search">
-        <input type="text" placeholder="검색" id="q" style="display: inline-block;">
+        <select name="type" id="type">
+            <option value="writer">작성자</option>
+            <option value="title">제목</option>
+        </select>
+        <input type="text" placeholder="검색어를 입력하세요" id="q" style="display: inline-block;">
         <i class="bi bi-search" onclick="search_func()"></i>
     </div>
+<!-- id=nav인 곳만 들고 가서 적용이되기때문에 스크립트를 밑에쓰면 적용이 안되므로 nav안에서 script를 정의한다   -->
+    <script>
+        const search_func = () => {
+            const type = document.querySelector("#type").value;
+            const q = document.querySelector("#q").value;
+            location.href = "/board?type=" + type + "&q=" + q;
+        }
+    </script>
 </div>
 </body>
+
 </html>

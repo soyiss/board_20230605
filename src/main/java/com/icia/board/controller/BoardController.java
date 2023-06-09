@@ -44,12 +44,18 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable Long id,@RequestParam("page")int page, Model model) {
+    public String findById(@PathVariable Long id, @RequestParam("page") int page,
+                           @RequestParam("type") String type,
+                           @RequestParam("q") String q,
+                           Model model) {
+        System.out.println("id = " + id + ", page = " + page + ", type = " + type + ", q = " + q );
         boardService.updateHits(id);
         model.addAttribute("page",page);
         try {
             BoardDTO boardDTO = boardService.findById(id);
             model.addAttribute("board", boardDTO);
+            model.addAttribute("type", type);
+            model.addAttribute("q", q);
             List<CommentDTO> commentDTOList = commentService.findAll(id);
             if(commentDTOList.size()>0){
                 //0보다 크면 댓글이있음
@@ -86,10 +92,17 @@ public class BoardController {
 
     // /board?page=1(/board는 위에 묶여져있어서 겟매핑만 줘도된다
     @GetMapping
-    public String paging(@PageableDefault(page=1)Pageable pageable, Model model){
+    public String paging(@PageableDefault(page = 1) Pageable pageable,
+                         @RequestParam(value = "type", required = false, defaultValue = "") String type,
+                         @RequestParam(value = "q", required = false, defaultValue = "") String q,
+                         Model model) {
         System.out.println("page = " + pageable.getPageNumber());
-        Page<BoardDTO> boardDTOS = boardService.paging(pageable);
-        model.addAttribute("boardList",boardDTOS);
+        Page<BoardDTO> boardDTOS = boardService.paging(pageable, type, q);
+        if (boardDTOS.getTotalElements() == 0) {
+            model.addAttribute("boardList", null);
+        } else {
+            model.addAttribute("boardList", boardDTOS);
+        }
 
         //시작페이지(startPage), 마지막페ㅣ지(endPage)값 계산
         //하단에 보여줄 페이지 갯수 3개
@@ -106,10 +119,11 @@ public class BoardController {
             endPage = boardDTOS.getTotalPages();
         }*/
 
-
-
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
+        // 검색결과 페이징이 유지되려면 type,q값도 모델에 담아가야됨
+        model.addAttribute("type",type);
+        model.addAttribute("q",q);
         return "/boardPages/boardPaging";
     }
 
