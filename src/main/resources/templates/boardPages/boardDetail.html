@@ -81,7 +81,10 @@
 </body>
 <script th:inline="javascript">
     const list_req = () => {
-        location.href = "/board/";
+        // location.href = "/board/";
+        //page라는 모델에 담긴값을 같이보내줌
+        const page = [[${page}]];
+        location.href="/board?page="+page;
     }
 
     const req = (type) => {
