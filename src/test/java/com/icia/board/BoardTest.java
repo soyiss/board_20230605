@@ -114,5 +114,66 @@ public class BoardTest {
         System.out.println("boardEntities.isLast() = " + boardList.isLast()); // 마지막페이지인지 여부
     }
 
+    @Test
+    @DisplayName("검색 기능 테스트")
+    public void searchTest(){
+        List<BoardEntity> boardEntityList = boardRepository.findByBoardTitleContaining("5");
+        boardEntityList.forEach(boardEntity -> {
+            System.out.println(BoardDTO.toDTO(boardEntity));
+        });
+    }
+
+    @Test
+    @Transactional //금이 포함된 객체에 첨부파일이있어서 에러가뜬다 (자식 엔티티를 접근해야되서 트렌젝셔널을 붙여야됨)
+    @DisplayName("작성자 검색 기능 테스트")
+    public void searchTest1(){
+        List<BoardEntity> boardEntityList = boardRepository.findByBoardWriterContaining("금");
+        boardEntityList.forEach(boardEntity -> {
+            System.out.println(BoardDTO.toDTO(boardEntity));
+            // System.out.println(BoardDTO.toDTO(boardEntity));에서 toDTO가 호출될때 파일이 있으면 boardFileDTO를 접근해서 @transactional을 붙여야된다
+        });
+    }
+
+    @Test
+    @Transactional //금이 포함된 객체에 첨부파일이있어서 에러가뜬다 (자식 엔티티를 접근해야되서 트렌젝셔널을 붙여야됨)
+    @DisplayName("작성자,제목 검색 기능 테스트")
+    public void searchTest2(){
+        //검색어는 q 하나인데 이게 제목이나 작성자에 포함되는걸 조회하니까 메서드 매개변수를 똑같이 (q,q)를 준다
+        String q = "30";
+        List<BoardEntity> boardEntityList = boardRepository.findByBoardTitleContainingOrBoardWriterContainingOrderByIdDesc(q, q);
+        boardEntityList.forEach(boardEntity -> {
+            System.out.println(BoardDTO.toDTO(boardEntity));
+        });
+    }
+
+
+    @Test
+    @Transactional
+    @DisplayName("검색 결과 페이징")
+    public void searchPaging() {
+        String q = "2";
+        int page = 0;
+        int pageLimit = 3;
+        Page<BoardEntity> boardEntities = boardRepository.findByBoardWriterContaining(q, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        Page<BoardDTO> boardList = boardEntities.map(boardEntity ->
+                BoardDTO.builder()
+                        .id(boardEntity.getId())
+                        .boardTitle(boardEntity.getBoardTitle())
+                        .boardWriter(boardEntity.getBoardWriter())
+                        .createdAt(UtilClass.dateFormat(boardEntity.getCreatedAt()))
+                        .boardHits(boardEntity.getBoardHits())
+                        .build()
+        );
+
+//                map > 페이지를 유지하면서 데이터를 옮겨줌
+        System.out.println("boardEntities.getContent() = " + boardList.getContent()); // 요청페이지에 들어있는 데이터
+        System.out.println("boardEntities.getTotalElements() = " + boardList.getTotalElements()); // 전체 글갯수
+        System.out.println("boardEntities.getNumber() = " + boardList.getNumber()); // 요청페이지(jpa 기준)
+        System.out.println("boardEntities.getTotalPages() = " + boardList.getTotalPages()); // 전체 페이지 갯수
+        System.out.println("boardEntities.getSize() = " + boardList.getSize()); // 한페이지에 보여지는 글갯수
+        System.out.println("boardEntities.hasPrevious() = " + boardList.hasPrevious()); // 이전페이지 존재 여부
+        System.out.println("boardEntities.isFirst() = " + boardList.isFirst()); // 첫페이지인지 여부
+        System.out.println("boardEntities.isLast() = " + boardList.isLast()); // 마지막페이지인지 여부
+    }
 
 }
